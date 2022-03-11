@@ -17,6 +17,14 @@
 
   <form action="/payment" class="form" method="POST">
      @csrf
+    
+    <!--Notification Div -->
+    @if(session('error'))
+    <div class="alert alert-error">
+        {{session('error')}}
+    </div>
+    @endif
+
     <div>
       <h2>Address</h2>
 
@@ -45,11 +53,11 @@
           <input id="gopay" name="payment_method" type="radio" value="gopay" />
         </div>
 
-        <div class="form__radio">
+        <!-- <div class="form__radio">
           <label for="ovo"><img class="image" src="http://paymentgateway-laravel.test/assets/gopay.png">
             OVO</label>
           <input id="ovo" name="payment_method" type="radio" value="ovo"/>
-        </div>
+        </div> -->
       </div>
     </fieldset>
     <legend>Combine Payment Method</legend>
@@ -59,9 +67,9 @@
       <input id="combine" name="payment_method" type="radio" value="combine"/>
     </div>
     <div class="form__radio">
-      <label for="combine">
+      <label for="gopay_amount">
         Input Go-Pay </label>
-      <input id="combine" name="payment_method" type="text" placeholder="Example (IDR): 100000"/>
+      <input id="gopay_amount" name="gopay_amount" type="text" placeholder="Example (IDR): 100000"/>
     </div>
 
     <div>

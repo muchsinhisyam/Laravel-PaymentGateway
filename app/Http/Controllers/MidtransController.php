@@ -95,4 +95,8 @@ class MidtransController extends Controller
             return ['code' => 1, 'message' => 'Success', 'result' => $charge];
         }
     }
+
+    public function combinePayment(Request $request){
+        return "Hello";
+    }
 }
