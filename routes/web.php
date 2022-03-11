@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MidtransController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\HomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,10 +16,7 @@ use App\Http\Controllers\PaymentController;
 |
 */
 
-Route::get('/', function () {
-    return view('index');
-});
-
+Route::get('/', [HomeController::class, 'homePage']);
 Route::post('/payment', [PaymentController::class, 'redirectPayments']);
 Route::post('/BCA/payment', [MidtransController::class, 'createBCAPayment']);
 Route::post('/gopay/payment', [MidtransController::class, 'createGoPayPayment']);

@@ -25,18 +25,20 @@
     </div>
     @endif
 
-    <div>
-      <h2>Address</h2>
+    <!-- To relay data from view to the controller by input hidden
+    <input type="hidden" name="data" value ="{{ $data }}"> -->
 
+    <div>
+      <h2>Customer Data</h2>
       <div class="card">
         <address>
-          Muchsin Hisyam<br />
-          Jalan Merdeka no 45<br />
-          Jakarta
+          {{ $data->fname }} {{ $data->lname }}<br />
+          {{ $data->phone }}<br />
+          {{ $data->email }}
         </address>
       </div>
     </div>
-
+    
     <fieldset>
       <legend>Single Payment Method</legend>
 
@@ -77,23 +79,31 @@
 
       <table>
         <tbody>
+          @php
+              $total = 0;
+          @endphp
+          @foreach($items['items'] as $item)
           <tr>
-            <td>Front-End Development</td>
-            <td align="right">IDR 200.000</td>
+            <td>{{ $item['name'] }} x{{ $item['quantity'] }}</td>
+            <td align="right">IDR {{ $item['price'] }}</td>
           </tr>
-          <tr>
-            <td>UI/UX Design</td>
-            <td align="right">IDR 100.000</td>
-          </tr>
+          @php
+              $total += $item['price'];
+          @endphp
+          @endforeach
         </tbody>
         <tfoot>
           <tr>
             <td>Total</td>
-            <td align="right">IDR 300.000</td>
+            <td align="right">IDR {{ $total }}</td>
           </tr>
         </tfoot>
       </table>
     </div>
+    <!-- To relay data from view to the controller by input hidden -->
+    <input type="hidden" name="data" value ="{{ $data }}">
+    <input type="hidden" name="items" value ="{{ json_encode($items) }}">
+    <input type="hidden" name="total" value ="{{ $total }}">
 
     <div>
       <button class="button button--full" type="submit"><svg class="icon">
