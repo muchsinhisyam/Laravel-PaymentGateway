@@ -30,7 +30,7 @@
     </div>
 
     <fieldset>
-      <legend>Payment Method</legend>
+      <legend>Single Payment Method</legend>
 
       <div class="form__radios">
         <div class="form__radio">
@@ -52,29 +52,36 @@
         </div>
       </div>
     </fieldset>
+    <legend>Combine Payment Method</legend>
+    <div class="form__radio">
+      <label for="combine"><img class="image" src="http://paymentgateway-laravel.test/assets/gopay.png"><img class="image" src="http://paymentgateway-laravel.test/assets/bca.jpg">
+        Go-Pay & BCA Virtual Account</label>
+      <input id="combine" name="payment_method" type="radio" value="combine"/>
+    </div>
+    <div class="form__radio">
+      <label for="combine">
+        Input Go-Pay </label>
+      <input id="combine" name="payment_method" type="text" placeholder="Example (IDR): 100000"/>
+    </div>
 
     <div>
-      <h2>Shopping Bill</h2>
+      <h2>Payment Detail</h2>
 
       <table>
         <tbody>
           <tr>
-            <td>Shipping fee</td>
-            <td align="right">$5.43</td>
+            <td>Front-End Development</td>
+            <td align="right">IDR 200.000</td>
           </tr>
           <tr>
-            <td>Discount 10%</td>
-            <td align="right">-$1.89</td>
-          </tr>
-          <tr>
-            <td>Price Total</td>
-            <td align="right">$84.82</td>
+            <td>UI/UX Design</td>
+            <td align="right">IDR 100.000</td>
           </tr>
         </tbody>
         <tfoot>
           <tr>
             <td>Total</td>
-            <td align="right">$88.36</td>
+            <td align="right">IDR 300.000</td>
           </tr>
         </tfoot>
       </table>
@@ -83,7 +90,7 @@
     <div>
       <button class="button button--full" type="submit"><svg class="icon">
           <use xlink:href="#icon-shopping-bag" />
-        </svg>Buy Now</button>
+        </svg>Pay Now</button>
     </div>
   </form>
 </div>

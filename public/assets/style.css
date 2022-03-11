@@ -1,6 +1,6 @@
 :root {
-  --color-background: #fae3ea;
-  --color-primary: #fc8080;
+  --color-background: #6B99C7;
+  --color-primary: #446485;
   --font-family-base: Poppin, sans-serif;
   --font-size-h1: 1.25rem;
   --font-size-h2: 1rem;
@@ -18,7 +18,7 @@ html {
 }
 
 body {
-  background-color: #fae3ea;
+  background-color: #6B99C7;
   background-color: var(--color-background);
   display: grid;
   font-family: Poppin, sans-serif;
@@ -80,7 +80,7 @@ input {
 }
 
 input[type="radio"] {
-  accent-color: #fc8080;
+  accent-color: #446485;
   accent-color: var(--color-primary);
 }
 
@@ -116,7 +116,7 @@ tfoot {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  background-color: #fc8080;
+  background-color: #446485;
   background-color: var(--color-primary);
   border-radius: 999em;
   color: #fff;
@@ -139,7 +139,7 @@ tfoot {
 
 .button:focus,
 .button:hover {
-  background-color: #e96363;
+  background-color: #6B99C7;
 }
 
 .button--full {
@@ -148,7 +148,7 @@ tfoot {
 
 .card {
   border-radius: 1em;
-  background-color: #fc8080;
+  background-color: #446485;
   background-color: var(--color-primary);
   color: #fff;
   padding: 1em;
