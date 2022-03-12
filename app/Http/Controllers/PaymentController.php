@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 use App\Http\Controllers\MidtransController;
 use App\Models\CustomerDetail;
@@ -32,7 +33,7 @@ class PaymentController extends Controller
                 return $midtrans->createGoPayPayment($request, $customerData, $items, $total);
             }
             if($payment == 'combine' && $gopay_amount != null){
-                return $midtrans->combinePayment($request, $customerData);
+                return $midtrans->combinePayment($request, $customerData, $items, $total);
             }
             else{
                 return redirect('/')->with('error', 'You need to fill gopay amount!');
