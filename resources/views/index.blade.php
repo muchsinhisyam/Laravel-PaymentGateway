@@ -2,7 +2,8 @@
 <html lang="en" >
 <head>
   <meta charset="UTF-8">
-  <title>CodePen - Checkout Form</title>
+  <title>Payment</title>
+  <meta name="csrf-token" content="{{ csrf_token() }}">
   <link rel="preconnect" href="https://fonts.gstatic.com" />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
 <link rel="stylesheet" href="css/style.css" /><link rel="stylesheet" href="{{ asset('assets/style.css') }}">
@@ -16,7 +17,8 @@
   </header>
 
   <form action="/payment" class="form" method="POST">
-     @csrf
+    {{csrf_field()}}
+    @csrf
     
     <!--Notification Div -->
     @if(session('error'))

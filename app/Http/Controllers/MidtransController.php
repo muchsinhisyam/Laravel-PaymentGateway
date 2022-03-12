@@ -9,6 +9,8 @@ use App\Http\Controllers\Midtrans\Config;
 use App\Http\Controllers\Midtrans\CoreApi;
 use Illuminate\Http\Client\Pool;
 use App\Models\CustomerDetail;
+use GuzzleHttp\Client;
+
 
 class MidtransController extends Controller
 {
@@ -114,9 +116,8 @@ class MidtransController extends Controller
 
     public function combinePayment(Request $request, $customerData, $items, $total){
         try{
-            $paymentMethod = "gopay";
             $transactionRequest = array(
-                "payment_type" => $paymentMethod,
+                "payment_type" => "gopay",
                 "transaction_details" => [
                     "gross_amount" => $total,
                     "order_id" => date('Y-m-dHis')
@@ -154,39 +155,30 @@ class MidtransController extends Controller
                 $transactionRequest['item_details'] = $item;
             }
 
-            // $responses = Http::pool(fn (Pool $pool) => [
-            //     $pool->post('http://paymentgateway-laravel.test/gopay/payment', [$transactionRequest]),
-            //     $pool->post('http://paymentgateway-laravel.test/BCA/payment', [ $transactionRequest]),
-            // ]);
+            // Make HTTP request of the API (POST method) with using Asynchronus of Go-Pay Payment 
+            $gopayRequest = Http::async()->post('http://paymentgateway-laravel.test/gopay/payment', [$transactionRequest]);
+            $gopayCharge = CoreApi::charge($transactionRequest);
+            if(!$gopayCharge){
+                return ['code' => 0, 'message' => 'Error occured'];
+            }
+            $gopayRequest->wait();
 
-            $client = new GuzzleHttp\Client();
-            $request = new \GuzzleHttp\Psr7\Request('POST', 'http://paymentgateway-laravel.test/gopay/payment');
-            $response = $client->sendAsync($request)->then(function ($response) {
-                $charge = CoreApi::charge($transactionRequest);
-                if(!$charge){
-                    return ['code' => 0, 'message' => 'Error occured'];
-                }
-                $paymentMethod = "bank_transfer";
-            });
-            $response->wait();
-
-            // // $response = Http::post('http://paymentgateway-laravel.test/BCA/payment', [
-            // //     $transactionRequest
-            // // ]);
-
-            // // $paymentMethod = "bank_transfer";
-
-            // // Send the transaction request body to the CoreApi class - charge method
-            // $charge = CoreApi::charge($transactionRequest);
-            // if(!$charge){
-            //     return ['code' => 0, 'message' => 'Error occured'];
-            // }
-            return ['code' => 1, 'message' => 'Success', 'result' => $charge];
+            // Change the payment method to BCA, and order_id in JSON request body for BCA Virtual Account HTTP request
+            // To make it not conflict with previous JSON request (since order_id is unique, can't have same value)
+            $transactionRequest['payment_type'] = "bank_transfer";
+            $transactionRequest['transaction_details']['order_id'] = date('Y-m-dHis');
+            
+            // Make HTTP request of the API (POST method) with using Asynchronus of BCA VA Payment 
+            $bcaRequest = Http::async()->post('http://paymentgateway-laravel.test/BCA/payment', [$transactionRequest]);
+            $bcaCharge = CoreApi::charge($transactionRequest);
+            if(!$bcaCharge){
+                return ['code' => 0, 'message' => 'Error occured'];
+            }
+        
+            return ['code' => 1, 'message' => 'Success','gopay_response' =>  $gopayCharge, 'bca_response' =>  $bcaCharge];
         }
         catch (\Exception $e){
-            // throw $e;
-            dd($e);
-            return ['code' => 1, 'message' => 'Success', 'result' => $charge];
+            throw $e;
         }
     }
 }
