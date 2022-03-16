@@ -7,10 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\Midtrans\Config;
 use App\Http\Controllers\Midtrans\CoreApi;
-use Illuminate\Http\Client\Pool;
 use App\Models\CustomerDetail;
-use GuzzleHttp\Client;
-
 
 class MidtransController extends Controller
 {

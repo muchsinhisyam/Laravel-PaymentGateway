@@ -72,8 +72,8 @@
     </div>
     <div class="form__radio">
       <label for="gopay_amount">
-        Input Go-Pay </label>
-      <input id="gopay_amount" name="gopay_amount" type="text" placeholder="Example (IDR): 100000"/>
+        Go-Pay Balance </label>
+      <input id="gopay_amount" name="gopay_amount" type="number" value="{{ $balance }}" placeholder="Example (IDR): 100000" disabled/>
     </div>
 
     <div>

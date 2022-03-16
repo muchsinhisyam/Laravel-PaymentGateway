@@ -17,3 +17,6 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::get('/gopay/get-balance/{id}', [App\Http\Controllers\API\GopayController::class, 'get_balance']);
+Route::put('/gopay/update-balance/{id}', [App\Http\Controllers\API\GopayController::class, 'update_balance']);
