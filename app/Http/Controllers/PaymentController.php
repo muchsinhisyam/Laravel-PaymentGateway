@@ -29,11 +29,12 @@ class PaymentController extends Controller
             if($payment == 'bca'){
                 return $midtrans->createBCAPayment($request, $customerData, $items, $total);
             }
-            if($payment == 'gopay'){
+            // If Gopay Balance > Total, then no need to combine with other payment, because the balance is already sufficient
+            if($payment == 'gopay' || $gopay_amount > $total){
                 return $midtrans->createGoPayPayment($request, $customerData, $items, $total);
             }
             if($payment == 'combine' && $gopay_amount != null){
-                return $midtrans->combinePayment($request, $customerData, $items, $total);
+                return $midtrans->combinePayment($request, $customerData, $items, $total, $gopay_amount);
             }
             else{
                 return redirect('/')->with('error', 'You need to fill gopay amount!');

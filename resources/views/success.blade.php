@@ -2,7 +2,7 @@
 <html lang="en" >
 <head>
   <meta charset="UTF-8">
-  <title>Payment</title>
+  <title>Payment Created</title>
   <meta name="csrf-token" content="{{ csrf_token() }}">
   <link rel="preconnect" href="https://fonts.gstatic.com" />
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
@@ -13,108 +13,39 @@
 <!-- partial:index.partial.html -->
 <div class="iphone">
   <header class="header">
-    <h1>Checkout</h1>
+    <h1>Payment Created!</h1>
   </header>
-
-  <form action="/payment" class="form" method="POST">
-    {{csrf_field()}}
-    @csrf
-    
-    <!--Notification Div -->
-    @if(session('error'))
-    <div class="alert alert-error">
-        {{session('error')}}
-    </div>
-    @endif
-
-    <!-- To relay data from view to the controller by input hidden
-    <input type="hidden" name="data" value ="{{ $data }}"> -->
-
     <div>
       <h2>Customer Data</h2>
       <div class="card">
         <address>
-          {{ $data->fname }} {{ $data->lname }}<br />
-          {{ $data->phone }}<br />
-          {{ $data->email }}
+          Please proceed the payment before automatically canceled in 24 hours!
         </address>
       </div>
-      <br>
-      <h2>Go-Pay Balance</h2>
-      <div class="form__radio">
-          <label for="gopay"><img class="image" src="http://paymentgateway-laravel.test/assets/gopay.png">
-          <p><b>Rp. {{ $balance }}</b></p>
-        </div>
-    </div>
-    
-    <fieldset>
-      <legend>Single Payment Method</legend>
+    <div>
+    <div>
+      <h2>
+        <img class="image" src="http://paymentgateway-laravel.test/assets/gopay.png">Go-Pay Detail
+      </h2>
 
-      <div class="form__radios">
-        <div class="form__radio">
-          <label for="bca"><img class="image" src="http://paymentgateway-laravel.test/assets/bca.jpg">
-            BCA Virtual Account</label>
-          <input id="bca" name="payment_method" type="radio" value="bca" />
-        </div>
-
-        <div class="form__radio">
-          <label for="gopay"><img class="image" src="http://paymentgateway-laravel.test/assets/gopay.png">
-            Gopay</label>
-          <input id="gopay" name="payment_method" type="radio" value="gopay" />
-        </div>
-
-        <!-- <div class="form__radio">
-          <label for="ovo"><img class="image" src="http://paymentgateway-laravel.test/assets/gopay.png">
-            OVO</label>
-          <input id="ovo" name="payment_method" type="radio" value="ovo"/>
-        </div> -->
+      <div class="card2">
+          <p>Order ID: {{ $gopayResponse['order_id'] }}</p>
+          <p>Total: Rp. {{ $gopayResponse['gross_amount'] }}</p>
+          <p>Please proceed the payment through Go-pay link below</p>
+          <p>QR Code: <a href="{{ $gopayResponse['actions'][0]['url'] }}">Click here</a></p>
+          <p><a href="{{ $gopayResponse['actions'][1]['url'] }}">Click here</a> to redirect to the Go-Jek app </p>
       </div>
-    </fieldset>
-    <legend>Combine Payment Method</legend>
-    <div class="form__radio">
-      <label for="combine"><img class="image" src="http://paymentgateway-laravel.test/assets/gopay.png"><img class="image" src="http://paymentgateway-laravel.test/assets/bca.jpg">
-        Go-Pay & BCA Virtual Account</label>
-      <input id="combine" name="payment_method" type="radio" value="combine"/>
     </div>
-
     <div>
-      <h2>Payment Detail</h2>
-
-      <table>
-        <tbody>
-          @php
-              $total = 0;
-          @endphp
-          @foreach($items['items'] as $item)
-          <tr>
-            <td>{{ $item['name'] }} x{{ $item['quantity'] }}</td>
-            <td align="right">IDR {{ $item['price'] }}</td>
-          </tr>
-          @php
-              $total += $item['price'];
-          @endphp
-          @endforeach
-        </tbody>
-        <tfoot>
-          <tr>
-            <td>Total</td>
-            <td align="right">IDR {{ $total }}</td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
-    <!-- To relay data from view to the controller by input hidden -->
-    <input type="hidden" name="data" value ="{{ $data }}">
-    <input type="hidden" name="gopay_amount" value ="{{ $balance }}">
-    <input type="hidden" name="items" value ="{{ json_encode($items) }}">
-    <input type="hidden" name="total" value ="{{ $total }}">
-
-    <div>
-      <button class="button button--full" type="submit"><svg class="icon">
-          <use xlink:href="#icon-shopping-bag" />
-        </svg>Pay Now</button>
-    </div>
-  </form>
+      <h2>
+        <img class="image" src="http://paymentgateway-laravel.test/assets/bca.jpg">BCA VA Detail
+      </h2>
+      <div class="card2">
+          <p>Order ID: {{ $bcaResponse['order_id'] }}</p>
+          <p>BCA VA No: {{ $bcaResponse['va_numbers'][0]['va_number'] }}</p>
+          <p>Total: Rp. {{ $bcaResponse['gross_amount'] }}</p>
+      </div>
+  </div>
 </div>
 
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none">

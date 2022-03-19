@@ -154,6 +154,14 @@ tfoot {
   padding: 1em;
 }
 
+.card2 {
+  border-radius: 1em;
+  background-color:#b4b4b4;
+  background-color: var(--color-primary);
+  color: #fff;
+  padding: 1em;
+}
+
 .form {
   display: grid;
   grid-gap: 2em;

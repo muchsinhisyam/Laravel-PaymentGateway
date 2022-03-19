@@ -111,12 +111,14 @@ class MidtransController extends Controller
         }
     }
 
-    public function combinePayment(Request $request, $customerData, $items, $total){
+    public function combinePayment(Request $request, $customerData, $items, $total, $gopay_amount){
         try{
             $transactionRequest = array(
                 "payment_type" => "gopay",
                 "transaction_details" => [
-                    "gross_amount" => $total,
+                    // Gross amount = gopay balance because gopay need to paid first. 
+                    // Means the total should be exact as gopay balance
+                    "gross_amount" => $gopay_amount,
                     "order_id" => date('Y-m-dHis')
                 ],
                 "customer_details" => [
@@ -147,10 +149,29 @@ class MidtransController extends Controller
                 ]
             );
 
-            // Append the items array to the array of body request
-            foreach($items as $item){
-                $transactionRequest['item_details'] = $item;
+            // Set the item name as combination of all items name
+            $itemsName = '';
+            $loopIndex = 0;
+            foreach($items['items'] as $item){
+                if($loopIndex == 0){
+                    $itemsName = $item['name'];
+                }
+                else{
+                    $itemsName = $itemsName . ' + ' .$item['name'];
+                }
+                $loopIndex++;
             }
+            $transactionRequest['item_details'] = array([
+                "id" => "141334143143",
+                "price" => $gopay_amount,
+                "quantity" => 1,
+                "name" => $itemsName
+            ]);
+
+            // Append the items array to the array of body request
+            // foreach($items as $item){
+            //     $transactionRequest['item_details'] = $item;
+            // }
 
             // Make HTTP request of the API (POST method) with using Asynchronus of Go-Pay Payment 
             $gopayRequest = Http::async()->post('http://paymentgateway-laravel.test/gopay/payment', [$transactionRequest]);
@@ -163,7 +184,16 @@ class MidtransController extends Controller
             // Change the payment method to BCA, and order_id in JSON request body for BCA Virtual Account HTTP request
             // To make it not conflict with previous JSON request (since order_id is unique, can't have same value)
             $transactionRequest['payment_type'] = "bank_transfer";
-            $transactionRequest['transaction_details']['order_id'] = date('Y-m-dHis');
+            $transactionRequest['transaction_details']['order_id'] = date('Y-m-dHis').'1';
+            $totalSubtraction = $total - $gopay_amount;
+            $transactionRequest['transaction_details']['gross_amount'] = $totalSubtraction;
+            // Need to replace the Gopay item transaction to another item array
+            $transactionRequest['item_details'] = array([
+                "id" => "141334143143",
+                "price" => $totalSubtraction,
+                "quantity" => 1,
+                "name" => $itemsName
+            ]);
             
             // Make HTTP request of the API (POST method) with using Asynchronus of BCA VA Payment 
             $bcaRequest = Http::async()->post('http://paymentgateway-laravel.test/BCA/payment', [$transactionRequest]);
@@ -171,8 +201,13 @@ class MidtransController extends Controller
             if(!$bcaCharge){
                 return ['code' => 0, 'message' => 'Error occured'];
             }
+
+            // Convert JSON to array format
+            $gopayResponse = json_decode(json_encode($gopayCharge), true);
+            $bcaResponse = json_decode(json_encode($bcaCharge), true);
         
-            return ['code' => 1, 'message' => 'Success','gopay_response' =>  $gopayCharge, 'bca_response' =>  $bcaCharge];
+            return view('success', compact('gopayResponse', 'bcaResponse'));
+            //return ['code' => 1, 'message' => 'Success','gopay_response' =>  $gopayCharge, 'bca_response' =>  $bcaCharge];
         }
         catch (\Exception $e){
             throw $e;
