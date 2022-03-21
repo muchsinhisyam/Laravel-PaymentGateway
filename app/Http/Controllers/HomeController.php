@@ -16,7 +16,7 @@ class HomeController extends Controller
         $data = new CustomerDetail();
         $data->fname = "Muchsin";
         $data->lname = "Hisyam";
-        $data->phone = "081231239821";
+        $data->phone = "+6281238148010";
         $data->email = "muchsin.hisyam@gmail.com";
 
         // Set item for payment

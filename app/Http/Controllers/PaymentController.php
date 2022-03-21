@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 use App\Http\Controllers\MidtransController;
+use App\Http\Controllers\XenditController;
 use App\Models\CustomerDetail;
 
 class PaymentController extends Controller
@@ -26,6 +27,7 @@ class PaymentController extends Controller
 
             // Initiate Midtrans controller to call their function
             $midtrans = new MidtransController;
+            $xendit = new XenditController;
             if($payment == 'bca'){
                 return $midtrans->createBCAPayment($request, $customerData, $items, $total);
             }
@@ -33,8 +35,14 @@ class PaymentController extends Controller
             if($payment == 'gopay' || $gopay_amount > $total){
                 return $midtrans->createGoPayPayment($request, $customerData, $items, $total);
             }
+            if($payment == 'ovo'){
+                return $xendit->createOVOPayment($request, $customerData, $items, $total);
+            }
             if($payment == 'combine' && $gopay_amount != null){
                 return $midtrans->combinePayment($request, $customerData, $items, $total, $gopay_amount);
+            }
+            if($payment == 'combine_ovo_gopay' && $gopay_amount != null){
+                return $midtrans->combineOVOGopayPayment($request, $customerData, $items, $total, $gopay_amount);
             }
             else{
                 return redirect('/')->with('error', 'You need to fill gopay amount!');

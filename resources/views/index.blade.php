@@ -35,8 +35,8 @@
       <div class="card">
         <address>
           {{ $data->fname }} {{ $data->lname }}<br />
-          {{ $data->phone }}<br />
-          {{ $data->email }}
+          {{ $data->email }}<br />
+          {{ $data->phone }}
         </address>
       </div>
       <br>
@@ -63,6 +63,12 @@
           <input id="gopay" name="payment_method" type="radio" value="gopay" />
         </div>
 
+        <div class="form__radio">
+          <label for="ovo"><img class="image" src="http://paymentgateway-laravel.test/assets/ovo.png">
+            OVO</label>
+          <input id="ovo" name="payment_method" type="radio" value="ovo" />
+        </div>
+
         <!-- <div class="form__radio">
           <label for="ovo"><img class="image" src="http://paymentgateway-laravel.test/assets/gopay.png">
             OVO</label>
@@ -75,6 +81,11 @@
       <label for="combine"><img class="image" src="http://paymentgateway-laravel.test/assets/gopay.png"><img class="image" src="http://paymentgateway-laravel.test/assets/bca.jpg">
         Go-Pay & BCA Virtual Account</label>
       <input id="combine" name="payment_method" type="radio" value="combine"/>
+    </div>
+    <div class="form__radio">
+      <label for="combine_ovo_gopay"><img class="image" src="http://paymentgateway-laravel.test/assets/gopay.png"><img class="image" src="http://paymentgateway-laravel.test/assets/ovo.png">
+        Go-Pay & OVO</label>
+      <input id="combine_ovo_gopay" name="payment_method" type="radio" value="combine_ovo_gopay"/>
     </div>
 
     <div>
