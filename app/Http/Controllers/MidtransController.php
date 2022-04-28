@@ -299,17 +299,14 @@ class MidtransController extends Controller
             ]);
             
             // Make HTTP request of the API (POST method) with using Asynchronus of BCA VA Payment 
-            $bcaRequest = Http::async()->post('http://paymentgateway-laravel.test/BCA/payment', [$transactionRequest]);
-            $bcaCharge = CoreApi::charge($transactionRequest);
-            if(!$bcaCharge){
-                return ['code' => 0, 'message' => 'Error occured'];
-            }
+            $xendit = new XenditController;
+            $ovoCharge = $xendit->createOVOPayment($request, $customerData, $items, $totalSubtraction);
 
             // Convert JSON to array format
             $gopayResponse = json_decode(json_encode($gopayCharge), true);
-            $bcaResponse = json_decode(json_encode($bcaCharge), true);
+            $ovoResponse = json_decode(json_encode($ovoCharge), true);
         
-            return view('success', compact('gopayResponse', 'bcaResponse'));
+            return view('success-combine', compact('gopayResponse', 'ovoResponse'));
             //return ['code' => 1, 'message' => 'Success','gopay_response' =>  $gopayCharge, 'bca_response' =>  $bcaCharge];
         }
         catch (\Exception $e){

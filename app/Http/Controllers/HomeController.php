@@ -24,13 +24,13 @@ class HomeController extends Controller
             "items" => array(
             [
                 "id" => "123",
-                "name" => "Front-End Dev",
+                "name" => "Item 1",
                 "price" => 200000,
                 "quantity" => 1
             ],
             [
                 "id" => "312",
-                "name" => "UI/UX Design",
+                "name" => "Item 2",
                 "price" => 100000,
                 "quantity" => 1
             ]),
